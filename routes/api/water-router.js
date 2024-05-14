@@ -1,26 +1,27 @@
 import express from "express";
 
-import moviesController from "../../controllers/waters-controller.js";
+import waterController from "../../controllers/waters-controller.js";
 
 import { isEmptyBody } from "../../middlewares/index.js";
 
 import { validateBody } from "../../decorators/index.js";
-
-import {
-  movieAddSchema,
-  movieUpdateSchema,
-} from "../../schemas/water-schemas.js";
+import { waterAddSchema } from "../../models/Water.js";
 
 const watersRouter = express.Router();
 
-watersRouter.get("/", moviesController.getAll);
+watersRouter.get("/", waterController.getAll);
 
-// watersRouter.get("/:id", moviesController.getById);
+// watersRouter.get("/:id", waterController.getById);
 
-// watersRouter.post("/", isEmptyBody, validateBody(movieAddSchema), moviesController.add);
+watersRouter.post(
+  "/",
+  isEmptyBody,
+  validateBody(waterAddSchema),
+  waterController.add
+);
 
-// watersRouter.put("/:id", isEmptyBody, validateBody(movieUpdateSchema), moviesController.updateById);
+// watersRouter.put("/:id", isEmptyBody, validateBody(movieUpdateSchema), waterController.updateById);
 
-// watersRouter.delete("/:id", moviesController.deleteById);
+// watersRouter.delete("/:id", waterController.deleteById);
 
 export default watersRouter;

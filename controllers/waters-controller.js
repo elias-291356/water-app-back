@@ -10,7 +10,7 @@ const getAll = async (req, res) => {
 
 // const getById = async (req, res) => {
 //     const { id } = req.params;
-//     const result = await moviesService.getMovieById(id);
+//     const result = await Water.getMovieById(id);
 //     if (!result) {
 //         throw HttpError(404, `Movie with id=${id} not found`);
 //     }
@@ -18,15 +18,15 @@ const getAll = async (req, res) => {
 //     res.json(result);
 // }
 
-// const add = async (req, res) => {
-//     const result = await moviesService.addMovie(req.body);
+const add = async (req, res) => {
+  const result = await Water.create(req.body);
 
-//     res.status(201).json(result);
-// }
+  res.status(201).json(result);
+};
 
 // const updateById = async (req, res) => {
 //     const { id } = req.params;
-//     const result = await moviesService.updateMovieById(id, req.body);
+//     const result = await Water.updateMovieById(id, req.body);
 //     if (!result) {
 //         throw HttpError(404, `Movie with id=${id} not found`);
 //     }
@@ -36,7 +36,7 @@ const getAll = async (req, res) => {
 
 // const deleteById = async (req, res) => {
 //     const { id } = req.params;
-//     const result = await moviesService.deleteMovieById(id);
+//     const result = await Water.deleteMovieById(id);
 //     if (!result) {
 //         throw HttpError(404, `Movie with id=${id} not found`);
 //     }
@@ -49,7 +49,7 @@ const getAll = async (req, res) => {
 export default {
   getAll: ctrlWrapper(getAll),
   // getById: ctrlWrapper(getById),
-  // add: ctrlWrapper(add),
+  add: ctrlWrapper(add),
   // updateById: ctrlWrapper(updateById),
   // deleteById: ctrlWrapper(deleteById),
 };
