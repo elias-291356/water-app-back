@@ -3,20 +3,21 @@ import Water from "../models/Water.js";
 import { ctrlWrapper } from "../decorators/index.js";
 
 const getAll = async (req, res) => {
-  const result = await Water.find();
+  const result = await Water.find({}, "-createdAt -updatedAt");
 
   res.json(result);
 };
 
-// const getById = async (req, res) => {
-//     const { id } = req.params;
-//     const result = await Water.getMovieById(id);
-//     if (!result) {
-//         throw HttpError(404, `Movie with id=${id} not found`);
-//     }
+const getById = async (req, res) => {
+  const { id } = req.params;
+  // const result = await Water.findOne({id: id});
+  const result = await Water.findById(id);
+  if (!result) {
+    throw HttpError(404, `Water with id=${id} not found`);
+  }
 
-//     res.json(result);
-// }
+  res.json(result);
+};
 
 const add = async (req, res) => {
   const result = await Water.create(req.body);
@@ -24,32 +25,32 @@ const add = async (req, res) => {
   res.status(201).json(result);
 };
 
-// const updateById = async (req, res) => {
-//     const { id } = req.params;
-//     const result = await Water.updateMovieById(id, req.body);
-//     if (!result) {
-//         throw HttpError(404, `Movie with id=${id} not found`);
-//     }
+const updateById = async (req, res) => {
+  const { id } = req.params;
+  const result = await Water.findByIdAndUpdate(id, req.body);
+  if (!result) {
+    throw HttpError(404, `Water with id=${id} not found`);
+  }
 
-//     res.json(result);
-// }
+  res.json(result);
+};
 
-// const deleteById = async (req, res) => {
-//     const { id } = req.params;
-//     const result = await Water.deleteMovieById(id);
-//     if (!result) {
-//         throw HttpError(404, `Movie with id=${id} not found`);
-//     }
+const deleteById = async (req, res) => {
+  const { id } = req.params;
+  const result = await Water.findByIdAndDelete(id);
+  if (!result) {
+    throw HttpError(404, `Water with id=${id} not found`);
+  }
 
-//     res.json({
-//         message: "Delete success"
-//     })
-// }
+  res.json({
+    message: "Delete success",
+  });
+};
 
 export default {
   getAll: ctrlWrapper(getAll),
-  // getById: ctrlWrapper(getById),
+  getById: ctrlWrapper(getById),
   add: ctrlWrapper(add),
-  // updateById: ctrlWrapper(updateById),
-  // deleteById: ctrlWrapper(deleteById),
+  updateById: ctrlWrapper(updateById),
+  deleteById: ctrlWrapper(deleteById),
 };

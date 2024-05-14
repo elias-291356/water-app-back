@@ -4,32 +4,32 @@ import Joi from "joi";
 
 const waterSchema = new Schema(
   {
-    name: {
-      type: String,
+    mililiters: {
+      type: Number,
+      max: 5000,
+      required: true,
+    },
+    usedTime: {
+      type: Number,
       required: true,
     },
   },
   { versionKey: false, timestamps: true }
 );
 
-const Water = model("water", waterSchema);
-// category => categories
-// mouse => mice
 waterSchema.post("save", handleSaveError);
-
 waterSchema.pre("findOneAndUpdate", addUpdateSetting);
-
 waterSchema.post("findOneAndUpdate", handleSaveError);
 
 export const waterAddSchema = Joi.object({
-  name: Joi.string().required().messages({
-    "any.required": `"title" is a required field`,
+  mililiters: Joi.number().required().messages({
+    "any.required": `"mililiters" is a required field`,
   }),
-  // director: Joi.string().required(),
+  usedTime: Joi.number().required(),
 });
-
 export const waterUpdateSchema = Joi.object({
-  name: Joi.string(),
+  mililiters: Joi.number(),
+  usedTime: Joi.number(),
 });
-
+const Water = model("water", waterSchema);
 export default Water;
