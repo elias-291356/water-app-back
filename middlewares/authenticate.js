@@ -6,7 +6,7 @@ import { ctrlWrapper } from "../decorators/index.js";
 
 import User from "../models/User.js";
 
-const { JWT_SECRET } = process.env;
+const { ACCESS_SECRET_KEY } = process.env;
 
 const authenticate = async (req, res, next) => {
   const { authorization } = req.headers;
@@ -19,7 +19,7 @@ const authenticate = async (req, res, next) => {
     throw HttpError(401);
   }
   try {
-    const { id } = jwt.verify(token, JWT_SECRET);
+    const { id } = jwt.verify(token, ACCESS_SECRET_KEY);
     const user = await User.findById(id);
     if (!user || !user.token) {
       throw HttpError(401, "user not found");
