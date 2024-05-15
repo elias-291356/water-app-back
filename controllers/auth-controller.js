@@ -1,12 +1,12 @@
 import User from "../models/User.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-
+import "dotenv/config";
 import { HttpError } from "../helpers/index.js";
 
 import { ctrlWrapper } from "../decorators/index.js";
 
-const { JWT_SECRET } = process.env;
+const { REFRESH_SECRET_KEY, ACCESS_SECRET_KEY } = process.env;
 
 const signup = async (req, res) => {
   const { email, password } = req.body;
@@ -36,13 +36,22 @@ const signin = async (req, res) => {
   const payload = {
     id,
   };
-  const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "23h" });
-  await User.findByIdAndUpdate(id, { token });
+  const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, {
+    expiresIn: "1m",
+  });
+  const refreshToken = jwt.sign(payload, REFRESH_SECRET_KEY, {
+    expiresIn: "3d",
+  });
+
+  await User.findByIdAndUpdate(id, { accessToken, refreshToken });
 
   res.json({
-    token,
+    accessToken,
+    refreshToken,
   });
 };
+
+// ===================================
 
 const getCurrent = async (req, res) => {
   const { username, email } = req.user;
@@ -55,11 +64,41 @@ const getCurrent = async (req, res) => {
 
 const signout = async (req, res) => {
   const { _id } = req.user;
-  await User.findByIdAndUpdate(_id, { token: "" });
+  await User.findByIdAndUpdate(_id, { accessToken: "", refreshToken: "" });
 
   res.json({
     message: "Signout success",
   });
+};
+
+// ===================================
+
+const refresh = async (req, res) => {
+  const { refreshToken: token } = req.body;
+  try {
+    const { id } = jwt.verify(token, REFRESH_SECRET_KEY);
+    const isExist = await User.findOne({ refreshToken: token });
+    if (!isExist) {
+      throw HttpError(403, "Token invalid");
+    }
+
+    const payload = {
+      id,
+    };
+
+    const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, {
+      expiresIn: "1m",
+    });
+    const refreshToken = jwt.sign(payload, REFRESH_SECRET_KEY, {
+      expiresIn: "3d",
+    });
+    res.json({
+      accessToken,
+      refreshToken,
+    });
+  } catch (error) {
+    throw HttpError(403, error.message);
+  }
 };
 
 export default {
@@ -67,4 +106,5 @@ export default {
   signin: ctrlWrapper(signin),
   getCurrent: ctrlWrapper(getCurrent),
   signout: ctrlWrapper(signout),
+  refresh: ctrlWrapper(refresh),
 };
