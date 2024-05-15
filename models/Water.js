@@ -13,6 +13,11 @@ const waterSchema = new Schema(
       type: Number,
       required: true,
     },
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: "user",
+      required: true,
+    },
   },
   { versionKey: false, timestamps: true }
 );
@@ -31,5 +36,10 @@ export const waterUpdateSchema = Joi.object({
   mililiters: Joi.number(),
   usedTime: Joi.number(),
 });
+
+export const waterUpdateFavoriteSchema = Joi.object({
+  favorite: Joi.boolean().required(),
+});
+
 const Water = model("water", waterSchema);
 export default Water;

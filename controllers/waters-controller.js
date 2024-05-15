@@ -1,17 +1,29 @@
-import { HttpError } from "../helpers/index.js";
 import Water from "../models/Water.js";
+import { HttpError } from "../helpers/index.js";
 import { ctrlWrapper } from "../decorators/index.js";
 
 const getAll = async (req, res) => {
-  const result = await Water.find({}, "-createdAt -updatedAt");
+  const { _id: owner } = req.user;
+  const { page = 1, limit = 10 } = req.query;
+  const skip = (page - 1) * limit;
+  const result = await Water.find({ owner }, "-createdAt -updatedAt", {
+    skip,
+    limit,
+  });
+  const total = await Water.countDocuments({ owner });
 
-  res.json(result);
+  res.json({
+    result,
+    total,
+  });
 };
 
 const getById = async (req, res) => {
   const { id } = req.params;
-  // const result = await Water.findOne({id: id});
-  const result = await Water.findById(id);
+  const { _id: owner } = req.user;
+
+  // const result = await Water.findById(id);
+  const result = await Water.findOne({ _id: id, owner });
   if (!result) {
     throw HttpError(404, `Water with id=${id} not found`);
   }
@@ -20,14 +32,18 @@ const getById = async (req, res) => {
 };
 
 const add = async (req, res) => {
-  const result = await Water.create(req.body);
+  const { _id: owner } = req.user;
+  const result = await Water.create({ ...req.body, owner });
 
   res.status(201).json(result);
 };
 
 const updateById = async (req, res) => {
   const { id } = req.params;
-  const result = await Water.findByIdAndUpdate(id, req.body);
+  const { _id: owner } = req.user;
+
+  // const result = await Water.findByIdAndUpdate(id, req.body);
+  const result = await Water.findOneAndUpdate({ _id: id, owner }, req.body);
   if (!result) {
     throw HttpError(404, `Water with id=${id} not found`);
   }
@@ -37,7 +53,10 @@ const updateById = async (req, res) => {
 
 const deleteById = async (req, res) => {
   const { id } = req.params;
-  const result = await Water.findByIdAndDelete(id);
+  const { _id: owner } = req.user;
+
+  // const result = await Water.findByIdAndDelete(id);
+  const result = await Water.findOneAndDelete({ _id: id, owner });
   if (!result) {
     throw HttpError(404, `Water with id=${id} not found`);
   }
