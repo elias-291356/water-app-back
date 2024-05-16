@@ -2,7 +2,11 @@ import express from "express";
 
 import authController from "../../controllers/auth-controller.js";
 
-import { isEmptyBody, authenticate } from "../../middlewares/index.js";
+import {
+  isEmptyBody,
+  authenticate,
+  passport,
+} from "../../middlewares/index.js";
 
 import { validateBody } from "../../decorators/index.js";
 
@@ -13,6 +17,16 @@ import {
 } from "../../models/User.js";
 
 const authRouter = express.Router();
+
+authRouter.get(
+  "/google",
+  passport.authenticate("google", { scope: ["email", "profile"] })
+);
+authRouter.get(
+  "/google/callback",
+  passport.authenticate("google", { session: false }),
+  authController.googleAuth
+);
 
 authRouter.post(
   "/signup",
