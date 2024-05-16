@@ -37,7 +37,6 @@ const add = async (req, res) => {
 
   res.status(201).json(result);
 };
-
 const updateById = async (req, res) => {
   const { id } = req.params;
   const { _id: owner } = req.user;
