@@ -38,5 +38,4 @@ const googleCallback = async (
 const googleStrategy = new Strategy(googleParams, googleCallback);
 
 passport.use("google", googleStrategy);
-
 export default passport;
