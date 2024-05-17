@@ -6,7 +6,7 @@ import { HttpError } from "../helpers/index.js";
 
 import { ctrlWrapper } from "../decorators/index.js";
 
-const { REFRESH_SECRET_KEY, ACCESS_SECRET_KEY } = process.env;
+const { REFRESH_SECRET_KEY, ACCESS_SECRET_KEY, FRONTEND_URL } = process.env;
 
 const signup = async (req, res) => {
   const { email, password } = req.body;
@@ -101,10 +101,34 @@ const refresh = async (req, res) => {
   }
 };
 
+
+// ================
+
+const googleAuth = async (req, res) => {
+  const { _id: id } = req.user;
+  const payload = {
+    id,
+  };
+
+  const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, {
+    expiresIn: "1m",
+  });
+  const refreshToken = jwt.sign(payload, REFRESH_SECRET_KEY, {
+    expiresIn: "3d",
+  });
+
+  await User.findByIdAndUpdate(id, { accessToken, refreshToken });
+
+  res.redirect(
+    `${FRONTEND_URL}?accessToken=${accessToken}&refreshToken=${refreshToken}`
+  );
+};
+
 export default {
   signup: ctrlWrapper(signup),
   signin: ctrlWrapper(signin),
   getCurrent: ctrlWrapper(getCurrent),
   signout: ctrlWrapper(signout),
   refresh: ctrlWrapper(refresh),
+  googleAuth: ctrlWrapper(googleAuth),
 };
