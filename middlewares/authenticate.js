@@ -21,7 +21,8 @@ const authenticate = async (req, res, next) => {
   try {
     const { id } = jwt.verify(token, ACCESS_SECRET_KEY);
     const user = await User.findById(id);
-    if (!user || !user.token) {
+
+    if (!user || !user.accessToken) {
       throw HttpError(401, "user not found");
     }
 
