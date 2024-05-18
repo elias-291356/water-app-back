@@ -7,27 +7,27 @@ const emailRegexp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
 const userSchema = new Schema(
   {
-    username: {
-      type: String,
-      // required: true,
-    },
-    email: {
-      type: String,
-      unique: true,
-      match: emailRegexp,
-      // required: true,
-    },
-    password: {
-      type: String,
-      // required: true,
-      // minlength: 6,
-    },
-    confirmPassword: {
-      type: String,
-      // required: true,
+    // username: {
+    //   type: String,
+    //   // required: true,
+    // },
+    // email: {
+    //   type: String,
+    //   unique: true,
+    //   match: emailRegexp,
+    //   // required: true,
+    // },
+    // password: {
+    //   type: String,
+    //   // required: true,
+    //   // minlength: 6,
+    // },
+    // confirmPassword: {
+    //   type: String,
+    //   // required: true,
 
-      // minlength: 6,
-    },
+    //   // minlength: 6,
+    // },
     accessToken: {
       type: String,
     },
