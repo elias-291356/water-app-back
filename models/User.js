@@ -19,7 +19,12 @@ const userSchema = new Schema(
     },
     password: {
       type: String,
-      required: true,
+      // required: true,
+      // minlength: 6,
+    },
+    confirmPassword: {
+      type: String,
+      // required: true,
       // minlength: 6,
     },
     accessToken: {
