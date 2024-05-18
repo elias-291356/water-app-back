@@ -9,25 +9,25 @@ const userSchema = new Schema(
   {
     // username: {
     //   type: String,
-    //   // required: true,
+    //   required: true,
     // },
-    // email: {
-    //   type: String,
-    //   unique: true,
-    //   match: emailRegexp,
-    //   // required: true,
-    // },
-    // password: {
-    //   type: String,
-    //   // required: true,
-    //   // minlength: 6,
-    // },
-    // confirmPassword: {
-    //   type: String,
-    //   // required: true,
+    email: {
+      type: String,
+      unique: true,
+      match: emailRegexp,
+      required: true,
+    },
+    password: {
+      type: String,
+      required: true,
+      minlength: 6,
+    },
+    confirmPassword: {
+      type: String,
+      // required: true,
 
-    //   // minlength: 6,
-    // },
+      minlength: 6,
+    },
     accessToken: {
       type: String,
     },
@@ -46,8 +46,8 @@ userSchema.post("findOneAndUpdate", handleSaveError);
 
 export const userSignupSchema = Joi.object({
   // username: Joi.string().required(),
-  // email: Joi.string().pattern(emailRegexp).required(),
-  // password: Joi.string().min(6).required(),
+  email: Joi.string().pattern(emailRegexp).required(),
+  password: Joi.string().min(6).required(),
 });
 
 export const userSigninSchema = Joi.object({
