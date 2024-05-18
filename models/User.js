@@ -18,6 +18,10 @@ const userSchema = new Schema(
       required: true,
       minlength: 6,
     },
+    confirmPassword: {
+      type: String,
+      minlength: 6,
+    },
     accessToken: {
       type: String,
     },
@@ -37,6 +41,7 @@ userSchema.post("findOneAndUpdate", handleSaveError);
 export const userSignupSchema = Joi.object({
   email: Joi.string().pattern(emailRegexp).required(),
   password: Joi.string().min(6).required(),
+  confirmPassword: Joi.string().min(6),
 });
 
 export const userSigninSchema = Joi.object({
